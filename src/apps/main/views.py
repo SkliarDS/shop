@@ -3,11 +3,16 @@ from django.shortcuts import render
 
 def index(request):
     context = {
-        'title': 'Главная страница',
-        'content': 'Добро пожаловать на сайт'
+        'title': 'Home - Главная страница',
+        'content': 'Магазин мебели HOME'
     }
     return render(request, 'main/index.html', context)
 
 
 def about(request):
-    return HttpResponse('about page')
+    context = {
+        'title': 'Home - О нас',
+        'content': 'O нас',
+        'description': 'Наша команда приветствует Вас !!!!'
+    }
+    return render(request, 'main/about.html', context)
