@@ -11,8 +11,9 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
+from sre_constants import IN
 
-from django.conf.global_settings import STATICFILES_DIRS
+from django.conf.global_settings import INTERNAL_IPS, STATICFILES_DIRS
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -41,6 +42,7 @@ DJANGO_APPS = [
 ]
 
 THIRD_PARTY_APPS = [
+    'debug_toolbar',
     # 'rest_framework',
     # 'corsheaders',
     # 'django_filters',
@@ -62,7 +64,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
+
 
 ROOT_URLCONF = 'src.urls'
 
@@ -131,6 +136,15 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+MEDIA_URL = 'media/'
+
+MEDIA_ROOT = BASE_DIR / 'media'
+
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
+
+INTERNAL_IPS = [
+    '127.0.0.1',
+]
+

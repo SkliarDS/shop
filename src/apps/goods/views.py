@@ -3,9 +3,12 @@ from django.shortcuts import render
 from src.apps.goods.models import Products
 
 def catalog(request):
+
+    goods = Products.objects.all()
+
     context = {
         'title': 'Home - Каталог',
-        'goods': Products.objects.all()
+        'goods': goods
     }
     return render(request, 'goods/catalog.html', context)
 
