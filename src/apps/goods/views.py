@@ -1,17 +1,51 @@
+import dis
+from django.core.paginator import Paginator
 from django.shortcuts import render
 
 from src.apps.goods.models import Products
+from src.apps.goods.utils import q_search
 
-def catalog(request):
+def catalog(request, category_slug=None):
 
-    goods = Products.objects.all()
+    page = request.GET.get('page', 1)
+    on_sale = request.GET.get('on_sale', None)
+    order_by = request.GET.get('order_by', None) 
+    query = request.GET.get('q', None) 
+
+
+    category_name = ''
+    if category_slug == 'vse-tovary':
+        goods = Products.objects.all()
+        category_name = 'Все товары'
+    elif query:
+        goods = q_search(query)
+    else:
+        goods = Products.objects.filter(category__slug=category_slug)
+        category_name = goods[0].category.name
+
+    if on_sale:
+        goods = goods.filter(discount__gt=0)
+
+    if order_by and order_by != 'default':
+        goods = goods.order_by(order_by)
+
+    paginator = Paginator(goods, 3)
+    current_page = paginator.page(int(page))
 
     context = {
-        'title': 'Home - Каталог',
-        'goods': goods
+        'title': f'Home - {category_name}',
+        'goods': current_page,
+        'slug_url': category_slug
     }
     return render(request, 'goods/catalog.html', context)
 
 
-def product(request):
-    return render(request, 'goods/product.html')
+def product(request, product_slug):
+
+    product= Products.objects.get(slug=product_slug)
+    
+    context = {
+        'title': f'Home - {product.name}',
+        'product': product
+    }
+    return render(request, 'goods/product.html', context=context)
